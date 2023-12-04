@@ -1,5 +1,6 @@
 package adventofcode2023.days;
 
+import adventofcode2023.util.Numbers;
 import adventofcode2023.util.Pair;
 
 import java.io.InputStream;
@@ -78,12 +79,7 @@ public class Day03 extends AoCDay {
         this.getSymbols();
         this.fromMapGetNumbers();
 
-        int s = 0;
-        for (Integer n : numberMap.values()) {
-            s += n;
-        }
-
-        return s;
+        return Numbers.sumIntegerArray((List<Integer>) numberMap.values());
     }
 
     @Override
