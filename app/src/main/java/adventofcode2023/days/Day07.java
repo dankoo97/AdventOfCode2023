@@ -1,6 +1,5 @@
 package adventofcode2023.days;
 
-import java.awt.*;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.*;
