@@ -8,12 +8,9 @@ import adventofcode2023.days.*;
 import java.io.InputStream;
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
     public static void main(String[] args) {
-        int currentDay = 5;
+        int currentDay = 6;
         AoCDay d;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (args.length > 0) {
@@ -28,6 +25,7 @@ public class App {
             case 3 -> d = new Day03(inputStream);
             case 4 -> d = new Day04(inputStream);
             case 5 -> d = new Day05(inputStream);
+            case 6 -> d = new Day06(inputStream);
             default -> throw(new Error("Not implemented"));
         }
 
