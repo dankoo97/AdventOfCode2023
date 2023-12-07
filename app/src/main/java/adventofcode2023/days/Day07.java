@@ -175,26 +175,12 @@ public class Day07 extends AoCDay {
         Card.withJokers = true;
         Hand.withJokers = true;
         return getTotalWinnings(readHands());
-//        String[] cardHands = new String[] {"J3AJA", "J42JK"};
-//        for (String cardHand : cardHands) {
-//            ArrayList<Card> cards = new ArrayList<>();
-//            for (int i = 0; i < 5; i++) {
-//                cards.add(new Card(cardHand.substring(i, i+1)));
-//            }
-//            Hand hand = new Hand(cards);
-//            System.out.println(hand);
-//            System.out.println(hand.getHandValue());
-//            System.out.println(hand.cardCounts);
-//            System.out.println();
-//        }
-//        return null;
     }
 
     public BigInteger getTotalWinnings(TreeMap<Hand, BigInteger> hands) {
         BigInteger i = BigInteger.ONE;
         BigInteger total = BigInteger.ZERO;
         for (Hand hand : hands.navigableKeySet()) {
-            System.out.printf("%s: %s   %s\n", i, hand, hands.get(hand));
             total = total.add(i.multiply(hands.get(hand)));
             i = i.add(BigInteger.ONE);
         }
