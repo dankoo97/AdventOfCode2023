@@ -1,9 +1,9 @@
 package adventofcode2023.days;
 
-import org.w3c.dom.Node;
-
+import javax.sound.midi.SysexMessage;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -112,33 +112,50 @@ public class Day08 extends AoCDay {
 
     @Override
     public Object runPart1() {
-        NodePath nodePath = new NodePath("AAA");
         NodePath.directions = this.directions;
         NodePath.nodeMap = this.path;
-
+        NodePath nodePath = new NodePath("AAA");
         // Number of steps, not number of nodes visited
-//        return nodePath.runUntilNodeMatches("ZZZ");
-        return null;
+        return nodePath.runUntilNodeMatches("ZZZ");
+//        return null;
     }
 
     @Override
     public Object runPart2() {
         List<NodePath> nodePaths = new ArrayList<>(path.keySet().stream().filter((node) -> node.matches("..A")).map(NodePath::new).toList());
-        BigInteger multiplier = BigInteger.ONE;
-        BigInteger multiplierCycleSize = BigInteger.ONE;
+        ArrayList<BigInteger> start = new ArrayList<>();
+        ArrayList<BigInteger> offsets = new ArrayList<>();
+        ArrayList<BigInteger> cycles = new ArrayList<>();
+        BigInteger gcd = BigInteger.ZERO;
         for (NodePath node : nodePaths) {
             BigInteger cycleStart = node.runUntilCycle().subtract(BigInteger.ONE);
             BigInteger placeInCycle = node.findAllMatchingBetween("..Z", cycleStart.intValueExact(), node.path.size());
             BigInteger cycleSize = BigInteger.valueOf(node.path.size()).subtract(cycleStart);
-            if (multiplier.equals(BigInteger.ONE)) {
-                multiplier = placeInCycle;
-                multiplierCycleSize = cycleSize;
-            } else {
-                multiplier.modInverse()
-            }
 
+            start.add(cycleStart);
+            // Directions size is 281, so we want the number of direction cycles
+            offsets.add(placeInCycle.divide(BigInteger.valueOf(281)));
+            cycles.add(cycleSize);
         }
 
-        return multiplier;
+        BigInteger multiplier = BigInteger.ONE;
+        for (BigInteger i : offsets) {
+            multiplier = multiplier.multiply(i);
+        }
+
+        BigInteger sum = BigInteger.ZERO;
+        for (int i = 0; i < offsets.size(); i++) {
+            BigInteger y = multiplier.divide(offsets.get(i));
+            BigInteger z = y.modInverse(offsets.get(i));
+            sum = sum.add(cycles.get(i).multiply(y).multiply(z));
+        }
+
+        System.out.println(start);
+        System.out.println(offsets);
+        System.out.println(cycles);
+
+        System.out.println(sum);
+        System.out.println(multiplier);
+        return sum.mod(multiplier.multiply(BigInteger.valueOf(281 * 6)));
     }
 }
