@@ -27,7 +27,7 @@ public class Pair {
 
     @Override
     public String toString() {
-            return String.format("%s, %s", x, y);
+            return String.format("Pair(x=%s, y=%s)", x, y);
     }
 
     public int getX() {
