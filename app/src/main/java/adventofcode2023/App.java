@@ -30,6 +30,7 @@ public class App {
             case  8 -> d = new Day08(inputStream);
             case  9 -> d = new Day09(inputStream);
             case 10 -> d = new Day10(inputStream);
+            case 11 -> d = new Day11(inputStream);
             case 12 -> d = new Day12(inputStream);
             default -> throw(new Error("Not implemented"));
         }

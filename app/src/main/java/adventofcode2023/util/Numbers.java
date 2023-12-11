@@ -29,4 +29,11 @@ public class Numbers {
         }
         return s;
     }
+
+    public static boolean between(long value, long start, long end) {
+        if (start > end) {
+            return between(value, end, start);
+        }
+        return start < value && value < end;
+    }
 }

@@ -27,7 +27,7 @@ public class Pair {
 
     @Override
     public String toString() {
-            return String.format("Pair(x=%s, y=%s)", x, y);
+        return String.format("Pair(x=%s, y=%s)", x, y);
     }
 
     public int getX() {
@@ -48,5 +48,9 @@ public class Pair {
             }
         }
         return adjacent;
+    }
+
+    public int getDistance(Pair other) {
+        return Math.abs(getX() - other.getX()) + Math.abs(getY() - other.getY());
     }
 }
