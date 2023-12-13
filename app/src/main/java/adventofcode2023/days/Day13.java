@@ -1,7 +1,5 @@
 package adventofcode2023.days;
 
-import adventofcode2023.util.Pair;
-
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
