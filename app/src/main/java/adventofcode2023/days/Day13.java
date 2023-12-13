@@ -32,43 +32,43 @@ public class Day13 extends AoCDay {
     }
 
     public boolean almostReflectsAcrossRow(int row, List<String> pattern) {
-        Pair mismatch = null;
+        boolean mismatch = false;
         for (int i = 0; row + i + 1 < pattern.size() && row - i >= 0; i++) {
             for (int j = 0; j < pattern.get(row).length(); j++) {
                 if (pattern.get(row + i + 1).charAt(j) != pattern.get(row-i).charAt(j)) {
-                    if (mismatch == null) {
-                        mismatch = new Pair(j, row-i);
+                    if (!mismatch) {
+                        mismatch = true;
                     } else {
                         return false;
                     }
                 }
             }
         }
-        return mismatch != null;
+        return mismatch;
     }
 
     public boolean reflectAcrossCol(int col, List<String> pattern) {
         for (int i = 0; i + col + 1 < pattern.get(0).length() && col - i >= 0; i++) {
-            for (int j = 0; j < pattern.size(); j++) {
-                if (pattern.get(j).charAt(col + i + 1) != pattern.get(j).charAt(col - i)) return false;
+            for (String s : pattern) {
+                if (s.charAt(col + i + 1) != s.charAt(col - i)) return false;
             }
         }
         return true;
     }
 
     public boolean almostReflectsAcrossCol(int col, List<String> pattern) {
-        Pair mismatch = null;
+        boolean mismatch = false;
         for (int i = 0; i + col + 1 < pattern.get(0).length() && col - i >= 0; i++) {
-            for (int j = 0; j < pattern.size(); j++) {
-                if (pattern.get(j).charAt(col + i + 1) != pattern.get(j).charAt(col - i)) {
-                    if (mismatch == null)
-                        mismatch = new Pair(j, col-i);
+            for (String s : pattern) {
+                if (s.charAt(col + i + 1) != s.charAt(col - i)) {
+                    if (!mismatch)
+                        mismatch = true;
                     else
                         return false;
                 }
             }
         }
-        return mismatch != null;
+        return mismatch;
     }
 
     @Override
