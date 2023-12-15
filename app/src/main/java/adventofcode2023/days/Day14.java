@@ -4,7 +4,6 @@ import adventofcode2023.util.Pair;
 
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
@@ -15,7 +14,6 @@ public class Day14 extends AoCDay {
     }
     HashSet<Pair> roundedRocks;
     HashSet<Pair> cubeRocks;
-    HashMap<CacheKey, Pair> cache;
 
     public static class CacheKey {
         Pair pos;
