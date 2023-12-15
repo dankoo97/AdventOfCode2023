@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Objects;
 
 public class Day14 extends AoCDay {
     public enum Direction {
