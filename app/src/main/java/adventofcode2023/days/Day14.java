@@ -15,36 +15,6 @@ public class Day14 extends AoCDay {
     HashSet<Pair> roundedRocks;
     HashSet<Pair> cubeRocks;
 
-    public static class CacheKey {
-        Pair pos;
-        Direction d;
-        public CacheKey(Pair pos, Direction d) {
-            this.pos = pos;
-            this.d = d;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            CacheKey cacheKey = (CacheKey) o;
-            return Objects.equals(pos, cacheKey.pos) && d == cacheKey.d;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(pos, d);
-        }
-
-        @Override
-        public String toString() {
-            return "CacheKey{" +
-                    "pos=" + pos +
-                    ", d=" + d +
-                    '}';
-        }
-    }
-
     public Day14(InputStream file) {
         super(file);
         roundedRocks = new HashSet<>();
