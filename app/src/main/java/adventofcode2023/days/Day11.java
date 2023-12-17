@@ -56,8 +56,8 @@ public class Day11 extends AoCDay {
     }
 
     public BigInteger getDistanceBetween(Pair p1, Pair p2, BigInteger expansion) {
-        int missingRows = emptyRows.stream().filter(integer -> Numbers.between(integer, p1.getY(), p2.getY())).toList().size();
-        int missingCols = emptyCols.stream().filter(integer -> Numbers.between(integer, p1.getX(), p2.getX())).toList().size();
+        int missingRows = emptyRows.stream().filter(integer -> Numbers.between(integer, p1.y(), p2.y())).toList().size();
+        int missingCols = emptyCols.stream().filter(integer -> Numbers.between(integer, p1.x(), p2.x())).toList().size();
         return BigInteger.valueOf(p1.getDistance(p2)).add(expansion.subtract(BigInteger.ONE).multiply(BigInteger.valueOf(missingRows + missingCols)));
     }
 

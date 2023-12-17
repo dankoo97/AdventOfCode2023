@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.*;
 
 public class Day03 extends AoCDay {
-    private final Map<Pair, String> symbolMap;
+    private final Map<Pair, Character> symbolMap;
     private final Map<Pair, Integer> numberMap;
     private final Set<Pair> gears;
 
@@ -23,7 +23,7 @@ public class Day03 extends AoCDay {
         for (int i = 0; i < input.size(); i++) {
             for (int j = 0; j < input.get(i).length(); j++) {
                 if (input.get(i).substring(j, j+1).matches("[^.0-9]")) {
-                    symbolMap.put(new Pair(i, j), input.get(i).substring(j, j+1));
+                    symbolMap.put(new Pair(i, j), input.get(i).charAt(j));
                 }
                 if (input.get(i).substring(j, j+1).matches("\\*")) {
                     gears.add(new Pair(i, j));
@@ -41,19 +41,19 @@ public class Day03 extends AoCDay {
     }
 
     private Pair expandNum(Pair coord) {
-        int start = coord.getY(), end = coord.getY() + 1;
-        while (start >= 0 && input.get(coord.getX()).substring(start, end).matches("^\\d+$")) {
+        int start = coord.y(), end = coord.y() + 1;
+        while (start >= 0 && input.get(coord.x()).substring(start, end).matches("^\\d+$")) {
             start--;
         }
         start++;
 
-        while (end <= input.get(coord.getX()).length() && input.get(coord.getX()).substring(start, end).matches("^\\d+$")) {
+        while (end <= input.get(coord.x()).length() && input.get(coord.x()).substring(start, end).matches("^\\d+$")) {
             end++;
         }
         end--;
 
-        Pair key = new Pair(coord.getX(), start);
-        Integer value = Integer.parseInt(input.get(coord.getX()).substring(start, end));
+        Pair key = new Pair(coord.x(), start);
+        Integer value = Integer.parseInt(input.get(coord.x()).substring(start, end));
         if (!numberMap.containsKey(key)) {
             numberMap.put(key, value);
         }
@@ -65,7 +65,7 @@ public class Day03 extends AoCDay {
         ArrayList<Pair> adj = new ArrayList<>();
         for (Pair p : coord.getAdjacent()) {
             try {
-                if (input.get(p.getX()).substring(p.getY(), p.getY() + 1).matches("\\d")) {
+                if (input.get(p.x()).substring(p.y(), p.y() + 1).matches("\\d")) {
                     adj.add(p);
                 }
             } catch (IndexOutOfBoundsException ignored) {

@@ -1,12 +1,16 @@
 package adventofcode2023.days;
 
 import adventofcode2023.util.Pair;
+import adventofcode2023.util.Direction.Cardinal;
 
 import java.io.InputStream;
 import java.util.*;
 
+import static adventofcode2023.util.Direction.moveOne;
+import static adventofcode2023.util.Direction.readCharMap;
+
 public class Day16 extends AoCDay {
-    public record BeamParticle(Pair pos, Direction d) {
+    public record BeamParticle(Pair pos, Cardinal d) {
 
         @Override
             public boolean equals(Object o) {
@@ -24,39 +28,24 @@ public class Day16 extends AoCDay {
                         '}';
             }
         }
-    public enum Direction {
-        NORTH, EAST, SOUTH, WEST
-    }
     HashMap<Pair, Character> map;
     HashSet<Pair> energized;
     List<BeamParticle> beams;
     HashSet<BeamParticle> visited;
     public Day16(InputStream file) {
         super(file);
-        map = new HashMap<>();
         beams = new ArrayList<>();
         energized = new HashSet<>();
         visited = new HashSet<>();
 
-        for (int y = 0; y < input.size(); y++) {
-            for (int x = 0; x < input.get(y).length(); x++) {
-                char c = input.get(y).charAt(x);
-                if (c != '.') map.put(new Pair(x, y), c);
-            }
-        }
+        map = readCharMap(input, List.of('.'));
     }
 
     public HashSet<BeamParticle> step(BeamParticle bp) {
         energized.add(bp.pos);
         HashSet<BeamParticle> particleSet = new HashSet<>();
 
-        Pair newPos = null;
-        switch (bp.d) {
-            case NORTH -> newPos = new Pair(bp.pos.getX(), bp.pos.getY()-1);
-            case EAST -> newPos = new Pair(bp.pos.getX()+1, bp.pos.getY());
-            case SOUTH -> newPos = new Pair(bp.pos.getX(), bp.pos.getY()+1);
-            case WEST -> newPos = new Pair(bp.pos.getX()-1, bp.pos.getY());
-        }
+        Pair newPos = moveOne(bp.pos, bp.d);
 
         if (isOutside(newPos)) {
             return particleSet;
@@ -93,33 +82,33 @@ public class Day16 extends AoCDay {
     public BeamParticle reflectBeam(BeamParticle bp) {
         char c = map.get(bp.pos);
         return switch (bp.d) {
-            case NORTH -> new BeamParticle(bp.pos, c == '/' ? Direction.EAST : Direction.WEST);
-            case EAST -> new BeamParticle(bp.pos, c == '/' ? Direction.NORTH : Direction.SOUTH);
-            case SOUTH -> new BeamParticle(bp.pos, c == '/' ? Direction.WEST : Direction.EAST);
-            case WEST -> new BeamParticle(bp.pos, c == '/' ? Direction.SOUTH : Direction.NORTH);
+            case NORTH -> new BeamParticle(bp.pos, c == '/' ? Cardinal.EAST : Cardinal.WEST);
+            case EAST -> new BeamParticle(bp.pos, c == '/' ? Cardinal.NORTH : Cardinal.SOUTH);
+            case SOUTH -> new BeamParticle(bp.pos, c == '/' ? Cardinal.WEST : Cardinal.EAST);
+            case WEST -> new BeamParticle(bp.pos, c == '/' ? Cardinal.SOUTH : Cardinal.NORTH);
         };
     }
 
     public BeamParticle[] splitBeam(BeamParticle bp) {
         char c = map.get(bp.pos);
-        if (c == '|' && (bp.d == Direction.EAST || bp.d == Direction.WEST)) {
+        if (c == '|' && (bp.d == Cardinal.EAST || bp.d == Cardinal.WEST)) {
             return new BeamParticle[]{
-                    new BeamParticle(bp.pos, Direction.NORTH),
-                    new BeamParticle(bp.pos, Direction.SOUTH)
+                    new BeamParticle(bp.pos, Cardinal.NORTH),
+                    new BeamParticle(bp.pos, Cardinal.SOUTH)
             };
-        } else if (c == '-' && (bp.d == Direction.NORTH || bp.d == Direction.SOUTH)) {
+        } else if (c == '-' && (bp.d == Cardinal.NORTH || bp.d == Cardinal.SOUTH)) {
             return new BeamParticle[]{
-                    new BeamParticle(bp.pos, Direction.EAST),
-                    new BeamParticle(bp.pos, Direction.WEST)
+                    new BeamParticle(bp.pos, Cardinal.EAST),
+                    new BeamParticle(bp.pos, Cardinal.WEST)
             };
         }
         return new BeamParticle[]{bp};
     }
 
     public boolean isOutside(Pair pos) {
-        return pos.getX() < 0 || pos.getY() < 0 ||
-                pos.getY() >= input.size() ||
-                pos.getX() >= input.get(pos.getY()).length();
+        return pos.x() < 0 || pos.y() < 0 ||
+                pos.y() >= input.size() ||
+                pos.x() >= input.get(pos.y()).length();
     }
 
     public String toEnergizedMap() {
@@ -140,7 +129,7 @@ public class Day16 extends AoCDay {
     @Override
     public Object runPart1() {
         // At x=0, y=0 is a reflector
-        BeamParticle start = new BeamParticle(new Pair(-1, 0), Direction.EAST);
+        BeamParticle start = new BeamParticle(new Pair(-1, 0), Cardinal.EAST);
         runFromStart(start);
 
         energized.remove(start.pos);
@@ -153,7 +142,7 @@ public class Day16 extends AoCDay {
         long maxVal = 0;
 
         for (int i = 0; i < input.size(); i++) {
-            for (Direction d : Direction.values()) {
+            for (Cardinal d : Cardinal.values()) {
                 BeamParticle start = null;
                 switch (d) {
                     case NORTH -> start = new BeamParticle(new Pair(i, input.size()), d);

@@ -1,16 +1,16 @@
 package adventofcode2023.days;
 
 import adventofcode2023.util.Pair;
+import adventofcode2023.util.Direction.Cardinal;
 
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static adventofcode2023.util.Direction.moveOne;
+
 public class Day14 extends AoCDay {
-    public enum Direction {
-        NORTH, WEST, SOUTH, EAST
-    }
     HashSet<Pair> roundedRocks;
     HashSet<Pair> cubeRocks;
 
@@ -45,40 +45,26 @@ public class Day14 extends AoCDay {
         return !(cubeRocks.contains(p) || roundedRocks.contains(p));
     }
 
-    public Pair getMovement(Pair pos, Direction d) {
-        Pair adj;
-        switch (d) {
-            case NORTH -> adj = new Pair(pos.getX(), pos.getY()-1);
-            case EAST -> adj = new Pair(pos.getX()+1, pos.getY());
-            case SOUTH -> adj = new Pair(pos.getX(), pos.getY()+1);
-            case WEST -> adj = new Pair(pos.getX()-1, pos.getY());
-            default -> throw new Error("Unable to parse direction");
-        }
-        return adj;
-    }
-
-    public Pair moveTillStopped(Pair pos, Direction d) {
+    public void moveTillStopped(Pair pos, Cardinal d) {
         Pair rock = pos;
-        Pair adj = getMovement(pos, d);
+        Pair adj = moveOne(pos, d);
         while (canMoveRock(rock, adj)) {
             moveRock(rock, adj);
             rock = adj;
-            adj = getMovement(pos, d);
+            adj = moveOne(pos, d);
         }
-
-        return rock;
     }
 
     public boolean isValid(Pair p) {
-        return p.getX() >= 0 && p.getX() < input.get(0).length() &&
-                p.getY() >= 0 && p.getY() < input.size();
+        return p.x() >= 0 && p.x() < input.get(0).length() &&
+                p.y() >= 0 && p.y() < input.size();
     }
 
     public BigInteger calculateLoad() {
         BigInteger total = BigInteger.ZERO;
 
         for (Pair p : roundedRocks) {
-            total = total.add(BigInteger.valueOf(input.size() - p.getY()));
+            total = total.add(BigInteger.valueOf(input.size() - p.y()));
         }
 
         return total;
@@ -87,9 +73,6 @@ public class Day14 extends AoCDay {
     public void runXCycles(BigInteger x) {
         HashMap<HashSet<Pair>, BigInteger> seen = new HashMap<>();
         for (BigInteger i = BigInteger.ZERO; i.compareTo(x) < 0; i = i.add(BigInteger.ONE)) {
-            if (i.mod(BigInteger.valueOf(1_000_000)).equals(BigInteger.ZERO)) {
-                System.out.println(i);
-            }
             runCycle();
             if (seen.containsKey(roundedRocks)) {
                 System.out.println(seen.get(roundedRocks));
@@ -99,18 +82,17 @@ public class Day14 extends AoCDay {
             } else {
                 seen.put(roundedRocks, i);
             }
-
         }
     }
 
     public void runCycle() {
-        for (Direction d : Direction.values()) {
+        for (Cardinal d : new Cardinal[]{Cardinal.NORTH, Cardinal.WEST, Cardinal.SOUTH, Cardinal.EAST}) {
             HashSet<Pair> movableRocks;
             do {
                 movableRocks = new HashSet<>();
 
                 for (Pair p : roundedRocks) {
-                    Pair adj = getMovement(p, d);
+                    Pair adj = moveOne(p, d);
                     if (canMoveRock(p, adj)) movableRocks.add(p);
                 }
 
@@ -147,12 +129,12 @@ public class Day14 extends AoCDay {
             movableRocks = new HashSet<>();
 
             for (Pair p : roundedRocks) {
-                Pair adj = getMovement(p, Direction.NORTH);
+                Pair adj = moveOne(p, Cardinal.NORTH);
                 if (canMoveRock(p, adj)) movableRocks.add(p);
             }
 
             for (Pair p : movableRocks) {
-                moveTillStopped(p, Direction.NORTH);
+                moveTillStopped(p, Cardinal.NORTH);
             }
 
         } while (!movableRocks.isEmpty());

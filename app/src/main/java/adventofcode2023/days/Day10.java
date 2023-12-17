@@ -1,16 +1,16 @@
 package adventofcode2023.days;
 
+import adventofcode2023.util.Direction.Cardinal;
 import adventofcode2023.util.Pair;
 
 import java.io.InputStream;
 import java.util.*;
 
+import static adventofcode2023.util.Direction.moveOne;
+
 public class Day10 extends AoCDay{
-    public enum Direction {
-        NORTH, EAST, SOUTH, WEST
-    }
     Pair start;
-    HashMap<Pair, String> map;
+    HashMap<Pair, Character> map;
     ArrayList<Pair> loopPath;
     public Day10(InputStream file) {
         super(file);
@@ -19,11 +19,11 @@ public class Day10 extends AoCDay{
 
         for (int y = 0; y < input.size(); y++) {
             for (int x = 0; x < input.get(y).length(); x++) {
-                String value = input.get(y).substring(x, x+1);
+                char value = input.get(y).charAt(x);
                 switch (value) {
-                    case ".":
+                    case '.':
                         break;
-                    case "S":
+                    case 'S':
                         start = new Pair(x, y);
                     default:
                         map.put(new Pair(x, y), value);
@@ -35,8 +35,8 @@ public class Day10 extends AoCDay{
     public int followLoop() {
         loopPath.add(start);
 
-        for (Direction d: Direction.values()) {
-            Pair adj = getFromDirection(start, d);
+        for (Cardinal d: Cardinal.values()) {
+            Pair adj = moveOne(start, d);
             if (map.containsKey(adj) && isConnected(adj, start)) {
                 loopPath.add(adj);
                 break;
@@ -53,10 +53,10 @@ public class Day10 extends AoCDay{
     public int countInside() {
         HashSet<Pair> left = new HashSet<>(), right = new HashSet<>();
         HashSet<Pair> loopMembers = new HashSet<>(loopPath);
-        Direction facing = null;
+        Cardinal facing = null;
 
-        for (Direction d: Direction.values()) {
-            Pair adj = getFromDirection(start, d);
+        for (Cardinal d: Cardinal.values()) {
+            Pair adj = moveOne(start, d);
             if (adj.equals(loopPath.get(1))) {
                 facing = d;
                 break;
@@ -64,52 +64,53 @@ public class Day10 extends AoCDay{
         }
 
         for (Pair p : loopPath.subList(1, loopPath.size()-1)) {
-            Direction prev = facing;
-            Direction next = getNextDirection(facing, p);
+            Cardinal prev = facing;
+            assert facing != null;
+            Cardinal next = getNextCardinal(facing, p);
 
             Pair[] adj = new Pair[]{
-                    getFromDirection(p, Direction.NORTH),
-                    getFromDirection(p, Direction.EAST),
-                    getFromDirection(p, Direction.SOUTH),
-                    getFromDirection(p, Direction.WEST)
+                    moveOne(p, Cardinal.NORTH),
+                    moveOne(p, Cardinal.EAST),
+                    moveOne(p, Cardinal.SOUTH),
+                    moveOne(p, Cardinal.WEST)
             };
 
-            if (prev == Direction.NORTH && next == Direction.NORTH) {
-                left.add(adj[Direction.WEST.ordinal()]);
-                right.add(adj[Direction.EAST.ordinal()]);
-            } else if (prev == Direction.NORTH && next == Direction.EAST) {
-                left.add(adj[Direction.NORTH.ordinal()]);
-                left.add(adj[Direction.WEST.ordinal()]);
-            } else if (prev == Direction.NORTH && next == Direction.WEST) {
-                right.add(adj[Direction.NORTH.ordinal()]);
-                right.add(adj[Direction.EAST.ordinal()]);
-            } else if (prev == Direction.EAST && next == Direction.EAST) {
-                left.add(adj[Direction.NORTH.ordinal()]);
-                right.add(adj[Direction.SOUTH.ordinal()]);
-            } else if (prev == Direction.EAST && next == Direction.SOUTH) {
-                left.add(adj[Direction.EAST.ordinal()]);
-                left.add(adj[Direction.NORTH.ordinal()]);
-            } else if (prev == Direction.EAST && next == Direction.NORTH) {
-                right.add(adj[Direction.EAST.ordinal()]);
-                right.add(adj[Direction.SOUTH.ordinal()]);
-            } else if (prev == Direction.SOUTH && next == Direction.SOUTH) {
-                left.add(adj[Direction.EAST.ordinal()]);
-                right.add(adj[Direction.WEST.ordinal()]);
-            } else if (prev == Direction.SOUTH && next == Direction.WEST) {
-                left.add(adj[Direction.SOUTH.ordinal()]);
-                left.add(adj[Direction.EAST.ordinal()]);
-            } else if (prev == Direction.SOUTH && next == Direction.EAST) {
-                right.add(adj[Direction.SOUTH.ordinal()]);
-                right.add(adj[Direction.WEST.ordinal()]);
-            } else if (prev == Direction.WEST && next == Direction.WEST) {
-                left.add(adj[Direction.SOUTH.ordinal()]);
-                right.add(adj[Direction.NORTH.ordinal()]);
-            } else if (prev == Direction.WEST && next == Direction.NORTH) {
-                left.add(adj[Direction.WEST.ordinal()]);
-                left.add(adj[Direction.SOUTH.ordinal()]);
-            } else if (prev == Direction.WEST && next == Direction.SOUTH) {
-                right.add(adj[Direction.WEST.ordinal()]);
-                right.add(adj[Direction.NORTH.ordinal()]);
+            if (prev == Cardinal.NORTH && next == Cardinal.NORTH) {
+                left.add(adj[Cardinal.WEST.ordinal()]);
+                right.add(adj[Cardinal.EAST.ordinal()]);
+            } else if (prev == Cardinal.NORTH && next == Cardinal.EAST) {
+                left.add(adj[Cardinal.NORTH.ordinal()]);
+                left.add(adj[Cardinal.WEST.ordinal()]);
+            } else if (prev == Cardinal.NORTH && next == Cardinal.WEST) {
+                right.add(adj[Cardinal.NORTH.ordinal()]);
+                right.add(adj[Cardinal.EAST.ordinal()]);
+            } else if (prev == Cardinal.EAST && next == Cardinal.EAST) {
+                left.add(adj[Cardinal.NORTH.ordinal()]);
+                right.add(adj[Cardinal.SOUTH.ordinal()]);
+            } else if (prev == Cardinal.EAST && next == Cardinal.SOUTH) {
+                left.add(adj[Cardinal.EAST.ordinal()]);
+                left.add(adj[Cardinal.NORTH.ordinal()]);
+            } else if (prev == Cardinal.EAST && next == Cardinal.NORTH) {
+                right.add(adj[Cardinal.EAST.ordinal()]);
+                right.add(adj[Cardinal.SOUTH.ordinal()]);
+            } else if (prev == Cardinal.SOUTH && next == Cardinal.SOUTH) {
+                left.add(adj[Cardinal.EAST.ordinal()]);
+                right.add(adj[Cardinal.WEST.ordinal()]);
+            } else if (prev == Cardinal.SOUTH && next == Cardinal.WEST) {
+                left.add(adj[Cardinal.SOUTH.ordinal()]);
+                left.add(adj[Cardinal.EAST.ordinal()]);
+            } else if (prev == Cardinal.SOUTH && next == Cardinal.EAST) {
+                right.add(adj[Cardinal.SOUTH.ordinal()]);
+                right.add(adj[Cardinal.WEST.ordinal()]);
+            } else if (prev == Cardinal.WEST && next == Cardinal.WEST) {
+                left.add(adj[Cardinal.SOUTH.ordinal()]);
+                right.add(adj[Cardinal.NORTH.ordinal()]);
+            } else if (prev == Cardinal.WEST && next == Cardinal.NORTH) {
+                left.add(adj[Cardinal.WEST.ordinal()]);
+                left.add(adj[Cardinal.SOUTH.ordinal()]);
+            } else if (prev == Cardinal.WEST && next == Cardinal.SOUTH) {
+                right.add(adj[Cardinal.WEST.ordinal()]);
+                right.add(adj[Cardinal.NORTH.ordinal()]);
             }
             facing = next;
         }
@@ -129,39 +130,39 @@ public class Day10 extends AoCDay{
         return left.size();
     }
 
-    public void getNextNode(ArrayList<Pair> direction) {
-        Pair last = direction.get(direction.size()-1);
-        Pair prevLast = direction.get(direction.size()-2);
+    public void getNextNode(ArrayList<Pair> cardinals) {
+        Pair last = cardinals.get(cardinals.size()-1);
+        Pair prevLast = cardinals.get(cardinals.size()-2);
         ArrayList<Pair> adj = new ArrayList<>(connected(last));
         adj.remove(prevLast);
-        direction.add(adj.get(0));
+        cardinals.add(adj.get(0));
     }
 
     public List<Pair> connected(Pair p) {
-        return mapStringToDirections(map.get(p)).stream().map((d -> getFromDirection(p, d))).toList();
+        return mapStringToCardinals(map.get(p)).stream().map((d -> moveOne(p, d))).toList();
     }
 
-    public List<Direction> mapStringToDirections(String s) {
-        return switch (s) {
-            case "F" -> Arrays.stream(new Direction[]{Direction.SOUTH, Direction.EAST}).toList();
-            case "J" -> Arrays.stream(new Direction[]{Direction.WEST, Direction.NORTH}).toList();
-            case "|" -> Arrays.stream(new Direction[]{Direction.NORTH, Direction.SOUTH}).toList();
-            case "-" -> Arrays.stream(new Direction[]{Direction.EAST, Direction.WEST}).toList();
-            case "7" -> Arrays.stream(new Direction[]{Direction.WEST, Direction.SOUTH}).toList();
-            case "L" -> Arrays.stream(new Direction[]{Direction.NORTH, Direction.EAST}).toList();
+    public List<Cardinal> mapStringToCardinals(Character c) {
+        return switch (c) {
+            case 'F' -> Arrays.stream(new Cardinal[]{Cardinal.SOUTH, Cardinal.EAST}).toList();
+            case 'J' -> Arrays.stream(new Cardinal[]{Cardinal.WEST, Cardinal.NORTH}).toList();
+            case '|' -> Arrays.stream(new Cardinal[]{Cardinal.NORTH, Cardinal.SOUTH}).toList();
+            case '-' -> Arrays.stream(new Cardinal[]{Cardinal.EAST, Cardinal.WEST}).toList();
+            case '7' -> Arrays.stream(new Cardinal[]{Cardinal.WEST, Cardinal.SOUTH}).toList();
+            case 'L' -> Arrays.stream(new Cardinal[]{Cardinal.NORTH, Cardinal.EAST}).toList();
             default -> new ArrayList<>();
         };
     }
 
-    public Direction getNextDirection(Direction d, Pair p) {
-        ArrayList<Direction> directions = new ArrayList<>(mapStringToDirections(map.get(p)));
+    public Cardinal getNextCardinal(Cardinal d, Pair p) {
+        ArrayList<Cardinal> cardinals = new ArrayList<>(mapStringToCardinals(map.get(p)));
         switch (d) {
-            case NORTH -> directions.remove(Direction.SOUTH);
-            case EAST -> directions.remove(Direction.WEST);
-            case SOUTH -> directions.remove(Direction.NORTH);
-            case WEST -> directions.remove(Direction.EAST);
+            case NORTH -> cardinals.remove(Cardinal.SOUTH);
+            case EAST -> cardinals.remove(Cardinal.WEST);
+            case SOUTH -> cardinals.remove(Cardinal.NORTH);
+            case WEST -> cardinals.remove(Cardinal.EAST);
         }
-        return directions.get(0);
+        return cardinals.get(0);
     }
 
     public boolean isConnected(Pair p1, Pair p2) {
@@ -169,10 +170,10 @@ public class Day10 extends AoCDay{
     }
 
     public boolean isOutside(Pair p) {
-        return p.getX() < 0 ||
-                p.getY() < 0 ||
-                p.getY() > input.size() ||
-                p.getX() > input.get(0).length();
+        return p.x() < 0 ||
+                p.y() < 0 ||
+                p.y() >= input.size() ||
+                p.x() >= input.get(p.y()).length();
     }
 
     public HashSet<Pair> floodSearch(HashSet<Pair> candidates, HashSet<Pair> visited) {
@@ -181,8 +182,8 @@ public class Day10 extends AoCDay{
             visited.add(curr);
             candidates.remove(curr);
 
-            for (Direction d : Direction.values()) {
-                Pair adj = getFromDirection(curr, d);
+            for (Cardinal d : Cardinal.values()) {
+                Pair adj = moveOne(curr, d);
                 if (visited.contains(adj)) {
                     continue;
                 }
@@ -194,15 +195,6 @@ public class Day10 extends AoCDay{
             }
         }
         return visited;
-    }
-
-    public static Pair getFromDirection(Pair p, Direction d) {
-        return switch (d) {
-            case NORTH -> new Pair(p.getX(), p.getY() - 1);
-            case EAST -> new Pair(p.getX() + 1, p.getY());
-            case SOUTH -> new Pair(p.getX(), p.getY() + 1);
-            case WEST -> new Pair(p.getX() - 1, p.getY());
-        };
     }
 
     @Override

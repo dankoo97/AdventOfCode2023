@@ -4,13 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Pair {
-    int x, y;
-
-    public Pair(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
+public record Pair(int x, int y) {
 
     @Override
     public boolean equals(Object o) {
@@ -30,14 +24,6 @@ public class Pair {
         return String.format("Pair(x=%s, y=%s)", x, y);
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public List<Pair> getAdjacent() {
         List<Pair> adjacent = new ArrayList<>();
         for (int i = -1; i < 2; i++) {
@@ -51,6 +37,6 @@ public class Pair {
     }
 
     public int getDistance(Pair other) {
-        return Math.abs(getX() - other.getX()) + Math.abs(getY() - other.getY());
+        return Math.abs(x - other.x) + Math.abs(y - other.y);
     }
 }
