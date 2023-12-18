@@ -24,9 +24,9 @@ public class Day10 extends AoCDay{
                     case '.':
                         break;
                     case 'S':
-                        start = new Pair(x, y);
+                        start = Pair.fromLong(x, y);
                     default:
-                        map.put(new Pair(x, y), value);
+                        map.put(Pair.fromLong(x, y), value);
                 }
             }
         }
@@ -170,10 +170,10 @@ public class Day10 extends AoCDay{
     }
 
     public boolean isOutside(Pair p) {
-        return p.x() < 0 ||
-                p.y() < 0 ||
-                p.y() >= input.size() ||
-                p.x() >= input.get(p.y()).length();
+        return p.x().intValue() < 0 ||
+                p.y().intValue() < 0 ||
+                p.y().intValue() >= input.size() ||
+                p.x().intValue() >= input.get(p.y().intValue()).length();
     }
 
     public HashSet<Pair> floodSearch(HashSet<Pair> candidates, HashSet<Pair> visited) {

@@ -22,8 +22,8 @@ public class Day14 extends AoCDay {
         for (int y = 0; y < input.size(); y++) {
             for (int x = 0; x < input.get(y).length(); x++) {
                 switch (input.get(y).charAt(x)) {
-                    case 'O' -> roundedRocks.add(new Pair(x, y));
-                    case '#' -> cubeRocks.add(new Pair(x, y));
+                    case 'O' -> roundedRocks.add(Pair.fromLong(x, y));
+                    case '#' -> cubeRocks.add(Pair.fromLong(x, y));
                 }
             }
         }
@@ -56,15 +56,15 @@ public class Day14 extends AoCDay {
     }
 
     public boolean isValid(Pair p) {
-        return p.x() >= 0 && p.x() < input.get(0).length() &&
-                p.y() >= 0 && p.y() < input.size();
+        return p.x().intValue() >= 0 && p.x().intValue() < input.get(0).length() &&
+                p.y().intValue() >= 0 && p.y().intValue() < input.size();
     }
 
     public BigInteger calculateLoad() {
         BigInteger total = BigInteger.ZERO;
 
         for (Pair p : roundedRocks) {
-            total = total.add(BigInteger.valueOf(input.size() - p.y()));
+            total = total.add(BigInteger.valueOf(input.size() - p.y().intValue()));
         }
 
         return total;
@@ -108,7 +108,7 @@ public class Day14 extends AoCDay {
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < input.size(); y++) {
             for (int x = 0; x < input.get(y).length(); x++) {
-                Pair p = new Pair(x, y);
+                Pair p = Pair.fromLong(x, y);
                 if (roundedRocks.contains(p)) {
                     sb.append("O");
                 } else if (cubeRocks.contains(p)) {

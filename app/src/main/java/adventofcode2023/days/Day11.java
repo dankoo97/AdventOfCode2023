@@ -26,7 +26,7 @@ public class Day11 extends AoCDay {
         for (int y = 0; y < input.size(); y++) {
             for (int x = 0; x < input.get(y).length(); x++) {
                 if (input.get(y).charAt(x) == '#') {
-                    galaxies.add(new Pair(x, y));
+                    galaxies.add(new Pair(BigInteger.valueOf(x), BigInteger.valueOf(y)));
                 }
             }
         }
@@ -56,9 +56,9 @@ public class Day11 extends AoCDay {
     }
 
     public BigInteger getDistanceBetween(Pair p1, Pair p2, BigInteger expansion) {
-        int missingRows = emptyRows.stream().filter(integer -> Numbers.between(integer, p1.y(), p2.y())).toList().size();
-        int missingCols = emptyCols.stream().filter(integer -> Numbers.between(integer, p1.x(), p2.x())).toList().size();
-        return BigInteger.valueOf(p1.getDistance(p2)).add(expansion.subtract(BigInteger.ONE).multiply(BigInteger.valueOf(missingRows + missingCols)));
+        int missingRows = emptyRows.stream().filter(integer -> Numbers.between(integer, p1.y().longValue(), p2.y().longValue())).toList().size();
+        int missingCols = emptyCols.stream().filter(integer -> Numbers.between(integer, p1.x().longValue(), p2.x().longValue())).toList().size();
+        return p1.getDistance(p2).add(expansion.subtract(BigInteger.ONE).multiply(BigInteger.valueOf(missingRows + missingCols)));
     }
 
     @Override

@@ -95,15 +95,15 @@ public class Day17 extends AoCDay {
 
     @Override
     public Object runPart1() {
-        Pair start = new Pair(0, 0);
-        Pair end = new Pair(input.get(0).length()-1, input.size()-1);
+        Pair start = Pair.ORIGIN;
+        Pair end = Pair.fromLong(input.get(0).length()-1, input.size()-1);
         return bfs(start, end, 0, 3);
     }
 
     @Override
     public Object runPart2() {
-        Pair start = new Pair(0, 0);
-        Pair end = new Pair(input.get(0).length()-1, input.size()-1);
+        Pair start = Pair.ORIGIN;
+        Pair end = Pair.fromLong(input.get(0).length()-1, input.size()-1);
         return bfs(start, end, 3, 10);
     }
 }

@@ -106,16 +106,16 @@ public class Day16 extends AoCDay {
     }
 
     public boolean isOutside(Pair pos) {
-        return pos.x() < 0 || pos.y() < 0 ||
-                pos.y() >= input.size() ||
-                pos.x() >= input.get(pos.y()).length();
+        return pos.x().intValue() < 0 || pos.y().intValue() < 0 ||
+                pos.y().intValue() >= input.size() ||
+                pos.x().intValue() >= input.get(pos.y().intValue()).length();
     }
 
     public String toEnergizedMap() {
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < input.size(); y++) {
             for (int x = 0; x < input.get(y).length(); x++) {
-                if (energized.contains(new Pair(x, y))) {
+                if (energized.contains(Pair.fromLong(x, y))) {
                     sb.append('#');
                 } else {
                     sb.append('.');
@@ -129,7 +129,7 @@ public class Day16 extends AoCDay {
     @Override
     public Object runPart1() {
         // At x=0, y=0 is a reflector
-        BeamParticle start = new BeamParticle(new Pair(-1, 0), Cardinal.EAST);
+        BeamParticle start = new BeamParticle(Pair.fromLong(-1, 0), Cardinal.EAST);
         runFromStart(start);
 
         energized.remove(start.pos);
@@ -145,10 +145,10 @@ public class Day16 extends AoCDay {
             for (Cardinal d : Cardinal.values()) {
                 BeamParticle start = null;
                 switch (d) {
-                    case NORTH -> start = new BeamParticle(new Pair(i, input.size()), d);
-                    case EAST -> start = new BeamParticle(new Pair(0, i), d);
-                    case SOUTH -> start = new BeamParticle(new Pair(i, 0), d);
-                    case WEST -> start = new BeamParticle(new Pair(input.size(), i), d);
+                    case NORTH -> start = new BeamParticle(Pair.fromLong(i, input.size()), d);
+                    case EAST -> start = new BeamParticle(Pair.fromLong(0, i), d);
+                    case SOUTH -> start = new BeamParticle(Pair.fromLong(i, 0), d);
+                    case WEST -> start = new BeamParticle(Pair.fromLong(input.size(), i), d);
                 }
 
                 runFromStart(start);
