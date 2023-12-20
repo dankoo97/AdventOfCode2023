@@ -78,7 +78,7 @@ public class Day19 extends AoCDay {
                 i = i.multiply(BigInteger.valueOf(max + 1 - min));
             }
             return i;
-        };
+        }
 
         @Override
         public boolean equals(Object o) {
