@@ -24,7 +24,6 @@ public class Day20 extends AoCDay {
         }
 
         for (ButtonModule b : ButtonModule.buttonModuleMap.values()) {
-            System.out.println(b);
             List<ButtonModule> temp = b.allChildModules();
             temp.retainAll(conjunctions);
             for (ButtonModule conjunction : temp) {
@@ -204,7 +203,6 @@ public class Day20 extends AoCDay {
 
     @Override
     public Object runPart1() {
-        if (true) return null;
         Button b = new Button("button", List.of("broadcaster"));
         for (int i = 0; i < 1000; i++) {
             ButtonModule.pulseQueue.add(new ButtonModule.PulseOp(b, ButtonModule.buttonModuleMap.get("broadcaster"), false));
