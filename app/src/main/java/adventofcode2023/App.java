@@ -10,7 +10,7 @@ import java.io.InputStream;
 public class App {
 
     public static void main(String[] args) {
-        int currentDay = 20;
+        int currentDay = 22;
         AoCDay d;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (args.length > 0) {
@@ -40,6 +40,7 @@ public class App {
             case 18 -> d = new Day18(inputStream);
             case 19 -> d = new Day19(inputStream);
             case 20 -> d = new Day20(inputStream);
+            case 22 -> d = new Day22(inputStream);
             default -> throw(new Error("Not implemented"));
         }
 
